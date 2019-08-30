@@ -169,7 +169,7 @@ handler_mapping = [
     (r'^/$', handlers.MainHandler),
     (r'^/manifest.json$', handlers.ManifestHandler),
     (r'^/config/main/(?P<op>set|get)/?$', handlers.ConfigHandler),
-    (r'^/config/(?P<camera_id>\d+)/(?P<op>get|set|rem|set_preview|test|authorize)/?$', handlers.ConfigHandler),
+    (r'^/config/(?P<camera_id>\d+)/(?P<op>get|set|rem|test|authorize)/?$', handlers.ConfigHandler),
     (r'^/config/(?P<op>add|list|backup|restore)/?$', handlers.ConfigHandler),
     (r'^/picture/(?P<camera_id>\d+)/(?P<op>current|list|frame)/?$', handlers.PictureHandler),
     (r'^/picture/(?P<camera_id>\d+)/(?P<op>download|preview|delete)/(?P<filename>.+?)/?$', handlers.PictureHandler),
@@ -396,6 +396,8 @@ def run():
     logging.info('server started')
     
     io_loop = IOLoop.instance()
+    # we need to reset the loop's PID to fix PID checks when running in daemon mode
+    io_loop._pid = os.getpid()
     io_loop.start()
 
     logging.info('server stopped')
